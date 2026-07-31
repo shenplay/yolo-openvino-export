@@ -1,0 +1,26 @@
+name: Export YOLOv9 to OpenVINO
+
+on:
+  workflow_dispatch: # 支持手动一键触发
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install ultralytics
+
+      - name: Download & Export
+        run: |
+          python -c "from ultralytics import YOLO; model = YOLO('yolov9s.pt'); model.export(format='openvino', imgsz=320)"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: yolov9s_openvino_model
+          path: yolov9s_openvino_model/
